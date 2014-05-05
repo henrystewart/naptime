@@ -12,21 +12,19 @@
   (def getPhone (get-in (json/read-str (slurp "phone-numbers.json") :key-fn keyword) [:house-mates]))
   
   ; Sends the msg
-  (def sendMsg [nmbr msg]
+  (def sendMsg (fn [nmbr msg]
     (http/post "http://textbelt.com/text" {:form-params {:number nmbr :message msg}} )
+    )
+  )
 
   ; For each phone number in phone list, send msg
-
-  ; (http/post "http://textbelt.com/text" {:form-params {:number "4147046006" :message "henry sending sms through clojure lein"}} )
-  ;(http/post "http://textbelt.com/text" {:form-params {:number "4147046006" :message "henry sending sms through clojure lein"}} )
-  ;(http/post "http://textbelt.com/text" {:form-params {:number "4147046006" :message "henry sending sms through clojure lein"}} )
   
-
-  (doall (for [x getPhone] 
-    (println x)))
+  (sendMsg "4147046006" "test")
+  (sendMsg "6305894634" "test: I'm taking a nap. Clojure app")
+  
+  ; (doall (for [x  getPhone] 
+  ;   (sendMsg "4147046006" "test")))
   
 
   (println getPhone)
 )
-
-; (http/get "http://google.com")
