@@ -20,7 +20,7 @@
 
   ; ; For each phone number in phone list, send msg
   
-  (doall (for [x  getPhone] 
+  (doall (for [x  getPhone]
     ; (sendMsg "4147046006" "test")
     (sendMsg (val x) NAPMSG)
     )
