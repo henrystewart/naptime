@@ -5,11 +5,12 @@
 
 
 (defn -main []
-  ; (println "Hello World!")
 
+  ; should this be a macro?
+  (def NAPMSG "Someone in the house is taking a nap. Shh...")
 
   ; Get the phone numbers from filesys
-  (def getPhone (get-in (json/read-str (slurp "phone-numbers.json") :key-fn keyword) [:house-mates]))
+  (def getPhone (get-in (json/read-str (slurp ".phone-numbers.json") :key-fn keyword) [:house-mates]))
   
   ; Sends the msg
   (def sendMsg (fn [nmbr msg]
@@ -17,14 +18,13 @@
     )
   )
 
-  ; For each phone number in phone list, send msg
+  ; ; For each phone number in phone list, send msg
   
-  (sendMsg "4147046006" "test")
-  (sendMsg "6305894634" "test: I'm taking a nap. Clojure app")
-  
-  ; (doall (for [x  getPhone] 
-  ;   (sendMsg "4147046006" "test")))
-  
+  (doall (for [x  getPhone] 
+    ; (sendMsg "4147046006" "test")
+    (sendMsg (val x) NAPMSG)
+    )
+  )
 
-  (println getPhone)
+
 )
