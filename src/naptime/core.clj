@@ -3,28 +3,24 @@
   (require [clj-http.client :as http])
   (require [clojure.data.json :as json]))
 
+;;;; constants
+(def nap-message "Someone in the house is taking a nap. Shh...")
+
+;; relative path from project root
+(def people-file "people.json")
+
+(def people
+  (:people (json/read-str 
+           (slurp people-file) :key-fn keyword)))
+
+(def textbelt-uri "http://textbelt.com/text")
+
+(defn send-sms [phone message]
+  "Send an SMS message to a phone number."
+  (http/post textbelt-uri {:form-params {:number phone :message message}}))
 
 (defn -main []
-
-  ; should this be a macro?
-  (def NAPMSG "Someone in the house is taking a nap. Shh...")
-
-  ; Get the phone numbers from filesys
-  (def getPhone (get-in (json/read-str (slurp ".phone-numbers.json") :key-fn keyword) [:house-mates]))
-  
-  ; Sends the msg
-  (def sendMsg (fn [nmbr msg]
-    (http/post "http://textbelt.com/text" {:form-params {:number nmbr :message msg}} )
-    )
-  )
-
-  ; ; For each phone number in phone list, send msg
-  
-  (doall (for [x  getPhone]
-    ; (sendMsg "4147046006" "test")
-    (sendMsg (val x) NAPMSG)
-    )
-  )
-
-
-)
+  "Send nap-message to each number in phone-numbers."
+  (doall
+   (for [person people]
+     (send-sms (:phone person) nap-message))))  
